@@ -41,32 +41,3 @@ valine(Prems, Proofs, [Line, Conclusion, Name]) :-
         log([Line, Conclusion, Name], 'Invalid')).
 
 %valine(Prems, Proofs, E) :- writef('Unmatched line: %p\n', [E]), fail.
-
-
-% Get a proof at Line
-proof([[Line, Conclusion, Name]|Next], From, Line, [Line, Conclusion, Name]) :-
-    deep_contains(Next, From).
-proof([Box|_]], From, Line, Proof) :-
-    is_box(Box),
-    proof(Box, From, Line, Proof).
-proof([_|Next], From, Line, Proof) :-
-    proof(Next, From, Line, Proof).
-
-% Get a box starting at line Start and ending at line End
-% Only get boxes that can be reached from From
-box([Box|Next], From, Start, End, Box) :-
-    is_box(Box),
-    first(Box, [Start ,_ ,_]),
-    last(Box, [End, _, _]),
-    deep_contains(Next, From).
-box([H|T], From, Start, End, Box) :-
-    box(H, From, Start, End, Box),
-    box(T, From, Start, End, Box).
-        
-% Get a conclusion by line
-conclusion(Proofs, From, Line, Conclusion) :-
-    proof(Proofs, From, Line, [_, Conclusion, _]).
-        
-% Get a name by line
-name(Proofs, From, Line, Name) :-
-    proof(Proofs, From, Line, [_, _, Name]).

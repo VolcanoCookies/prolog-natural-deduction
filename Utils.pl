@@ -154,3 +154,104 @@ deep_contains([H|T], E) :-
 last([H|[]], H).
 last([H|T], E) :-
         last(T, E).
+
+/**
+ * proof(+Proofs : list, +From : proof, +Line : integer, -Proof : proof).
+ *
+ * Get a proof from a specific line, this will use the From argument to check if
+ * the line we want can actually be reached from the From line.
+ *
+ * This will first open any boxes to find the line we want, and if we find it,
+ * we then check if we can actually access it.
+ *
+ * We do this by first finding the line X we want using the Line variable, then
+ * we check if we can reach From by only checking the lines after X, without
+ * exiting any boxes.
+ *
+ * Example:
+ * Say we wanted to find X, we thus have [X|N], with N being all the proofs
+ * coming after X, bound to the box that X is in.
+ * We now simply check if N contains our From line, if it does not, X cannot
+ * be reached from From.
+ *
+ * @param Proofs the list of proofs we will check in.
+ * @param From the proof we are at currently, used to check if we can access
+ *        Proof.
+ * @param Line the index of the line we want to get.
+ * @param Proof the proof at line Line.
+ */
+proof([[Line, Conclusion, Name]|Next], From, Line, [Line, Conclusion, Name]) :-
+    deep_contains(Next, From).
+proof([Box|_]], From, Line, Proof) :-
+    is_box(Box),
+    proof(Box, From, Line, Proof).
+proof([_|Next], From, Line, Proof) :-
+    proof(Next, From, Line, Proof).
+
+/**
+ * box(+Proofs : list, +From : proof, +Start : integer, +End : integer, -Box : box).
+ *
+ * Get a box that starts at line Start, and ends at line End. Proofs can only
+ * refer to a box as a whole by referencing the Start and End line.
+ *
+ * This will first find the box that we want, and the check if we can actually
+ * access it from the line From. (the line we are calling from).
+ *
+ * We do this by first finding the box X we want using the Start and End
+ * variable, then we check if we can reach From by only checking the lines after
+ * X, without exiting any boxes.
+ *
+ * Example:
+ * Say we wanted to find X, we thus have [X|N], with N being all the proofs
+ * coming after X, bound to the box that X is in.
+ * We now simply check if N contains our From line, if it does not, X cannot
+ * be reached from From.
+ *
+ * @param Proofs the proofs to find the box in.
+ * @param From the line we are trying to find the box from.
+ * @param Start the index of the first line in the box.
+ * @param End the index of the last line in the box.
+ * @param Box our box that we wanted to find.
+ */
+box([Box|Next], From, Start, End, Box) :-
+    is_box(Box),
+    first(Box, [Start ,_ ,_]),
+    last(Box, [End, _, _]),
+    deep_contains(Next, From).
+box([H|T], From, Start, End, Box) :-
+    box(H, From, Start, End, Box),
+    box(T, From, Start, End, Box).
+
+/**
+ * conclusion(+Proofs : list, +From : proof, +Line : integer, -Conclusion : conclusion).
+ *
+ * Shortcut method for getting a conclusion at a specific line.
+ * Calls proof(Proofs, From, Line, Proof) under the hood.
+ *
+ * @param Proofs the list of proofs we will check in.
+ * @param From the proof we are at currently, used to check if we can access
+ *        Proof.
+ * @param Line the index of the line we want to get.
+ * @param Conclusion the conclusion at line Line.
+ *
+ * @see proof(Proofs, From, Line, Proof).
+ */
+conclusion(Proofs, From, Line, Conclusion) :-
+    proof(Proofs, From, Line, [_, Conclusion, _]).
+
+/**
+ * name(+Proofs : list, +From : proof, +Line : integer, -Name : name).
+ *
+ * Shortcut method for getting a name at a specific line.
+ * Calls proof(Proofs, From, Line, Proof) under the hood.
+ *
+ * @param Proofs the list of proofs we will check in.
+ * @param From the proof we are at currently, used to check if we can access
+ *        Proof.
+ * @param Line the index of the line we want to get.
+ * @param Name the name at line Line.
+ *
+ * @see proof(Proofs, From, Line, Proof).
+ */
+name(Proofs, From, Line, Name) :-
+    proof(Proofs, From, Line, [_, _, Name]).
