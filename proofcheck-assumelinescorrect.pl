@@ -1,0 +1,72 @@
+% [Line, and(X, Y), andint(I1, I2)]
+% andint(I1, I2, and(X, Y)) :-
+%     conclusion(I1, X),
+%     conclusion(I2, Y).
+
+validate(Input) :-
+    load_files(['Utils.pl', 'Rules.pl']),
+    see(Input),
+    read(Prems), read(Goal), read(Proofs),
+    seen,
+    nb_setval(prems, Prems),
+    nb_setval(proofs, Proofs),
+    validate(Prems, Proofs, 0, Proofs),
+    check_goal(Goal, Proofs).
+
+% Depth tells us how many boxes we can open.
+validate(_, _, _, []).
+validate(Prems, Proofs, Depth, [Proof|Next]) :-
+    (is_box(Proof) -> (
+        NewDepth is Depth+1,
+        nb_setval(depth, NewDepth),
+        validate(Prems, Proofs, NewDepth, Proof)) ;
+        (nb_setval(depth, Depth),
+        valine(Prems, Proofs, Proof))),
+    validate(Prems, Proofs, Depth, Next).
+
+check_goal(Goal, Proofs) :-
+    last(Proofs, [_, Goal, _]) ->
+        write('Goal met!\n') ;
+        write('Goal not met!\n').
+
+% Log a line in the proof, and write if its valid or not.
+log([Line, Conclusion, Name], Valid) :-
+    format('~t~a~2|  ~w~t~15+ ~w~t~t~15+  ~t~a~8|~n', [Line, Conclusion, Name, Valid]).
+
+% Below we validate the different rules
+% Validate one line, since we will be writing logs of functions for all the names, we have a overload to only use the name and conclusion
+valine(Prems, Proofs, [Line, Conclusion, Name]) :-
+    (call(Name, Prems, Proofs, [Line, Conclusion, Name]) ->
+        log([Line, Conclusion, Name], 'Valid') ;
+        log([Line, Conclusion, Name], 'Invalid')).
+
+%valine(Prems, Proofs, E) :- writef('Unmatched line: %p\n', [E]), fail.
+
+
+% Get a proof at Line
+proof([[Line, Conclusion, Name]|Next], From, Line, [Line, Conclusion, Name]) :-
+    deep_contains(Next, From).
+proof([Box|_]], From, Line, Proof) :-
+    is_box(Box),
+    proof(Box, From, Line, Proof).
+proof([_|Next], From, Line, Proof) :-
+    proof(Next, From, Line, Proof).
+
+% Get a box starting at line Start and ending at line End
+% Only get boxes that can be reached from From
+box([Box|Next], From, Start, End, Box) :-
+    is_box(Box),
+    first(Box, [Start ,_ ,_]),
+    last(Box, [End, _, _]),
+    deep_contains(Next, From).
+box([H|T], From, Start, End, Box) :-
+    box(H, From, Start, End, Box),
+    box(T, From, Start, End, Box).
+        
+% Get a conclusion by line
+conclusion(Proofs, From, Line, Conclusion) :-
+    proof(Proofs, From, Line, [_, Conclusion, _]).
+        
+% Get a name by line
+name(Proofs, From, Line, Name) :-
+    proof(Proofs, From, Line, [_, _, Name]).
