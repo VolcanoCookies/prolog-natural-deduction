@@ -39,5 +39,3 @@ valine(Prems, Proofs, [Line, Conclusion, Name]) :-
     (call(Name, Prems, Proofs, [Line, Conclusion, Name]) ->
         log([Line, Conclusion, Name], 'Valid') ;
         log([Line, Conclusion, Name], 'Invalid')).
-
-%valine(Prems, Proofs, E) :- writef('Unmatched line: %p\n', [E]), fail.
