@@ -5,7 +5,8 @@
  *
  * @param List the object to check if its a list.
  */
-list([_|_]).
+is_list([]).
+is_list([_|_]).
 
 /**
  * append(+List : list, +Element : any, -Result : list).
@@ -54,13 +55,12 @@ len([_|T], Index, Size) :-
 /**
  * is_box(+Box : list).
  *
- * Succeeds if Box is a list, and is not a proof.
+ * Succeeds if Box is a list where the first element is not a integer.
  *
  * @param Box the potential box.
  */
-is_box(Box) :-
-    list(Box),
-    not(is_proof(Box)).
+is_box([H|_]) :-
+    not(integer(H)).
 
 /**
  * is_proof(+Proof : list).
@@ -69,7 +69,7 @@ is_box(Box) :-
  *
  * @param Proof the potential proof.
  */
-is_proof([Line|[_|[_|[]]]]) :-
+is_proof([Line, _, _]) :-
     integer(Line).
 
 /**
@@ -126,8 +126,8 @@ natural_order([H|[N|T]]) :-
  * @param List the list to check in.
  * @param Element the element to find in the list, or match.
  */
-contains([H|T], H).
-contains([H|T], E) :-
+contains([H|_], H).
+contains([_|T], E) :-
         contains(T, E).
 
 /**
@@ -138,10 +138,27 @@ contains([H|T], E) :-
  * @param List the list to check in, will check any sublists.
  * @param Element the element to find, or match.
  */
-deep_contains([H|T], H).
+deep_contains([H|_], H).
 deep_contains([H|T], E) :-
         deep_contains(H, E) ;
         deep_contains(T, E).
+
+/**
+ * deep_contains_proof(+Proofs : list, ?Proof : proof).
+ *
+ * Succeeds if Proofs, or any boxes within, contains Proof.
+ *
+ * @param Proofs the proofs to look in.
+ * @param Proof the proof to find.
+ */
+deep_contains_proof([Proof|_], Proof).
+deep_contains_proof([H|_], Proof) :-
+    not(is_proof(H)),
+    deep_contains_proof(H, Proof).
+deep_contains_proof([_|T], Proof) :-
+    not(is_proof(T)),
+    deep_contains_proof(T, Proof).
+
 
 /**
  * last(+List : list, ?Element : any).
@@ -152,7 +169,7 @@ deep_contains([H|T], E) :-
  * @param Element the last element.
  */
 last([H|[]], H).
-last([H|T], E) :-
+last([_|T], E) :-
         last(T, E).
 
 /**
@@ -181,8 +198,8 @@ last([H|T], E) :-
  * @param Proof the proof at line Line.
  */
 proof([[Line, Conclusion, Name]|Next], From, Line, [Line, Conclusion, Name]) :-
-    deep_contains(Next, From).
-proof([Box|_]], From, Line, Proof) :-
+    deep_contains_proof(Next, From).
+proof([Box|_], From, Line, Proof) :-
     is_box(Box),
     proof(Box, From, Line, Proof).
 proof([_|Next], From, Line, Proof) :-
@@ -215,11 +232,13 @@ proof([_|Next], From, Line, Proof) :-
  */
 box([Box|Next], From, Start, End, Box) :-
     is_box(Box),
-    first(Box, [Start ,_ ,_]),
-    last(Box, [End, _, _]),
-    deep_contains(Next, From).
-box([H|T], From, Start, End, Box) :-
-    box(H, From, Start, End, Box),
+    first_proof(Box, [Start ,_ ,_]),
+    last_proof(Box, [End, _, _]),
+    deep_contains_proof(Next, From).
+box([H|_], From, Start, End, Box) :-
+  is_box(H),
+  box(H, From, Start, End, Box).
+box([_|T], From, Start, End, Box) :-
     box(T, From, Start, End, Box).
 
 /**
