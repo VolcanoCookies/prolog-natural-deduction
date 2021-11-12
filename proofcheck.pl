@@ -24,6 +24,14 @@ validate(Prems, Proofs, Depth, [Proof|Next]) :-
         valine(Prems, Proofs, Proof))),
     validate(Prems, Proofs, Depth, Next).
 
+/**
+ * check_goal(+Goal : goal, +Proofs : list).
+ *
+ * Succeeds if the goal is met in our proofs.
+ *
+ * @param Goal the goal to find.
+ * @param Proofs the proofs to find the goal in.
+ */
 check_goal(Goal, Proofs) :-
     last(Proofs, [_, Goal, _]) ->
         write('Goal met!\n') ;
