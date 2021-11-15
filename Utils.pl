@@ -9,6 +9,36 @@ is_list([]).
 is_list([_|_]).
 
 /**
+ * all_match(+List : list, +Predicate : any).
+ *
+ * Succeeds if all elements in the list match the predicate provided.
+ *
+ * @param List the list to check in.
+ * @param Predicate the predicate all elements in the list must match.
+ */
+all_match([], Predicate).
+all_match([Predicate|T], Predicate) :-
+    all_match(T, Predicate).
+
+/**
+ * until(+List : list, +Element : any, -Sublist : list).
+ *
+ * Get all elements until Element from List. Fails if Element is not in List.
+ *
+ * Excluding Element.
+ *
+ * @param List the list to get a sublist of.
+ * @param Element the element to go until.
+ * @param Sublist the returned sublist, excludes Element.
+ */
+until(List, Element, Sublist) :-
+    until(List, Element, [], Sublist).
+until([Elm|_], Elm, Acc, Acc).
+until([H|T], Elm, Acc, Sub) :-
+    append(H, Acc, New),
+    until(T, Elm, New, Sub).
+
+/**
  * append(+List : list, +Element : any, -Result : list).
  *
  * Appends Element to the end of List, this works for both lists, and single objects.
@@ -250,13 +280,18 @@ box([_|T], From, Start, End, Box) :-
  * @param Proof the proof to find.
  * @param Box returns the list that contains the proof.
  */
-box_of(Box, Proof, Box) :-
+box_of(Proofs, Proof, Box) :-
+    box_of(Proofs, Proofs, Proof, Box).
+box_of(Initial, Box, Proof, Box) :-
+    contains(Box, Proof),
+    contains(Initial, Box).
+box_of(Box, Box, Proof, Box) :-
     contains(Box, Proof).
-box_of([H|_], Proof, Box) :-
+box_of(Initial, [H|_], Proof, Box) :-
     is_box(H),
-    box_of(H, Proof, Box).
-box_of([_|T], Proof, Box) :-
-    box_of(T, Proof, Box).
+    box_of(Initial, H, Proof, Box).
+box_of(Initial, [_|T], Proof, Box) :-
+    box_of(Initial, T, Proof, Box).
 
 /**
  * conclusion(+Proofs : list, +From : proof, +Line : integer, -Conclusion : conclusion).
