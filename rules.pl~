@@ -24,12 +24,6 @@ negel(I1, I2, _, Proofs, [Line, cont, Name]) :-
     conclusion(Proofs, [Line, cont, Name], I1, X),
     I1>I2.
 
-negint(I1,I2,_,Proofs, [Line,neg(C1),Name]) :-
-    box(Proofs, [Line,neg(C1),Name],I1,I2,Box),
-    first_proof(Box,[_,C1,_]),
-    last_proof(Box,[_,cont,_]).
-
-
 orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     box(Proofs, [Line, Conclusion, Name], I2, I3, Box1),
     first_proof(Box1, [_, C1, _]),
@@ -42,11 +36,3 @@ orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
 andint(I1, I2, _, Proofs, [Line,and(C1,C2),Name] ):-
    proof(Proofs, [Line,and(C1,C2),Name],I1, [_, C1, _]),
    proof(Proofs, [Line,and(C1,C2),Name],I2, [_, C2, _]).
-   
-andel1(I1,_,Proofs,[Line,Conclusion,Name]):-
-   proof(Proofs, [Line,Conclusion,Name], I1, [_, and(Conclusion, _), _ ]).
-   
-andel2(I1,_,Proofs,[Line,Conclusion,Name]):-
-   proof(Proofs, [Line,Conclusion,Name], I1, [_, and(_, Conclusion), _ ]).
-
-
