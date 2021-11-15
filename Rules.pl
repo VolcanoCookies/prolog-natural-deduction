@@ -5,14 +5,13 @@ impel(I1, I2, _, Proofs, [Line, Conclusion, Name]) :-
     conclusion(Proofs, [Line, Conclusion, Name], I1, Requirement),
     conclusion(Proofs, [Line, Conclusion, Name], I2, imp(Requirement, Conclusion)).
 
-assumption(_, _, _) :-
-    nb_getval(depth, Depth),
-    Depth>0.
+assumption(_, Proofs, [Line, Conclusion, Name]).
+%    box_of(Proofs, [Line, Conclusion, Name], Box).
 
-copy(I, _, _, _, Conclusion) :-
-    conclusion(I, Conclusion).
+copy(I, _, Proofs, [Line, Conclusion, Name]) :-
+    conclusion(Proofs, [Line, Conclusion, Name], I, Conclusion).
 
-impint(I1, I2, _, Proofs, Line, imp(C1, C2)) :-
+impint(I1, I2, _, Proofs, [Line, imp(C1, C2), _]) :-
     deep_contains(Proofs, [[I1, C1, _]|T]),
     I1<I2,
     I2<Line,
@@ -22,7 +21,7 @@ impint(I1, I2, _, Proofs, Line, imp(C1, C2)) :-
 negel(I1, I2, _, Proofs, [Line, cont, Name]) :-
     conclusion(Proofs, [Line, cont, Name], I2, neg(X)),
     conclusion(Proofs, [Line, cont, Name], I1, X),
-    I1>I2.
+    I1<I2.
 
 negint(I1,I2,_,Proofs, [Line,neg(C1),Name]) :-
     box(Proofs, [Line,neg(C1),Name],I1,I2,Box),
