@@ -5,23 +5,23 @@ impel(I1, I2, _, Proofs, [Line, Conclusion, Name]) :-
     conclusion(Proofs, [Line, Conclusion, Name], I1, Requirement),
     conclusion(Proofs, [Line, Conclusion, Name], I2, imp(Requirement, Conclusion)).
 
-assumption(_, Proofs, [Line, Conclusion, Name]).
-%    box_of(Proofs, [Line, Conclusion, Name], Box).
+assumption(_, Proofs, [Line, Conclusion, Name]) :-
+    box_of(Proofs, [Line, Conclusion, Name], Box),
+    not(Box = Proofs),
+    until(Box, [Line, Conclusion, Name], Sublist),
+    all_match(Sublist, [_, _, assumption]).
 
 copy(I, _, Proofs, [Line, Conclusion, Name]) :-
     conclusion(Proofs, [Line, Conclusion, Name], I, Conclusion).
 
-impint(I1, I2, _, Proofs, [Line, imp(C1, C2), _]) :-
-    deep_contains(Proofs, [[I1, C1, _]|T]),
-    I1<I2,
-    I2<Line,
-    Line is I2+1,
-    last([[I1, C1, _]|T], [I2, C2, _]).
+impint(I1, I2, _, Proofs, [Line, imp(C1, C2), Name]) :-
+    box(Proofs, [Line, imp(C1, C2), Name], I1, I2, Box),
+    first_proof(Box, [_, C1, _]),
+    last_proof(Box, [_, C2, _]).
 
 negel(I1, I2, _, Proofs, [Line, cont, Name]) :-
     conclusion(Proofs, [Line, cont, Name], I2, neg(X)),
-    conclusion(Proofs, [Line, cont, Name], I1, X),
-    I1<I2.
+    conclusion(Proofs, [Line, cont, Name], I1, X).
 
 negint(I1,I2,_,Proofs, [Line,neg(C1),Name]) :-
     box(Proofs, [Line,neg(C1),Name],I1,I2,Box),
@@ -42,10 +42,10 @@ andint(I1, I2, _, Proofs, [Line,and(C1,C2),Name] ):-
    proof(Proofs, [Line,and(C1,C2),Name],I1, [_, C1, _]),
    proof(Proofs, [Line,and(C1,C2),Name],I2, [_, C2, _]).
    
-andel1(I1,_,Proofs,[Line,Conclusion,Name]):-
-   proof(Proofs, [Line,Conclusion,Name], I1, [_, and(Conclusion, _), _ ]).
+andel1(I1, _, Proofs, [Line, Conclusion, Name]):-
+   proof(Proofs, [Line, Conclusion, Name], I1, [_, and(Conclusion, _), _]).
    
-andel2(I1,_,Proofs,[Line,Conclusion,Name]):-
-   proof(Proofs, [Line,Conclusion,Name], I1, [_, and(_, Conclusion), _ ]).
+andel2(I1, _, Proofs, [Line,Conclusion,Name]):-
+   proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
 
 
