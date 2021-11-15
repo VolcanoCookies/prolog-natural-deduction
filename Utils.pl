@@ -242,6 +242,23 @@ box([_|T], From, Start, End, Box) :-
     box(T, From, Start, End, Box).
 
 /**
+ * box_of(+Proofs : list, +Proof : proof, -Box : box).
+ *
+ * Finds the box that contains the provided proof.
+ *
+ * @param Proofs the proofs to look in.
+ * @param Proof the proof to find.
+ * @param Box returns the list that contains the proof.
+ */
+box_of(Box, Proof, Box) :-
+    contains(Box, Proof).
+box_of([H|_], Proof, Box) :-
+    is_box(H),
+    box_of(H, Proof, Box).
+box_of([_|T], Proof, Box) :-
+    box_of(T, Proof, Box).
+
+/**
  * conclusion(+Proofs : list, +From : proof, +Line : integer, -Conclusion : conclusion).
  *
  * Shortcut method for getting a conclusion at a specific line.
