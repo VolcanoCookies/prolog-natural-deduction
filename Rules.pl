@@ -1,5 +1,4 @@
-premise(Prems, Proofs, [Line, Conclusion, Name]) :-
-    contains(Proofs, [Line, Conclusion, Name]),
+premise(Prems, _, [_, Conclusion, _]) :-
     contains(Prems, Conclusion).
 
 impel(I1, I2, _, Proofs, [Line, Conclusion, Name]) :-
@@ -17,7 +16,7 @@ copy(I, _, Proofs, [Line, Conclusion, Name]) :-
 
 impint(I1, I2, _, Proofs, [Line, imp(C1, C2), Name]) :-
     box(Proofs, [Line, imp(C1, C2), Name], I1, I2, Box),
-    first_proof(Box, [_, C1, _]),
+    first_proof(Box, [_, C1, assumption]),
     last_proof(Box, [_, C2, _]).
 
 negel(I1, I2, _, Proofs, [Line, cont, Name]) :-
@@ -52,21 +51,17 @@ pbc(I1, I2, _, Proofs, [Line, C1, Name]) :-
     box(Proofs, [Line, C1, Name], I1, I2, Box),
     first_proof(Box, [_, neg(C1), _]),
     last_proof(Box, [_, cont, _]).
-
    
 andel1(I1, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, and(Conclusion, _), _]).
    
 andel2(I1, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
-    
 
 lem(_, _, [_, or(C1, neg(C1)), _]).
-=======
 
 contel(I1,_,Proofs,[Line,Conclusion,Name]):-
     conclusion(Proofs,[Line,Conclusion,Name],I1,cont).
-
 
 mt(I1, I2, _, Proofs, [Line, neg(C1), Name]) :-
     conclusion(Proofs, [Line, neg(C1), Name], I1, imp(C1,C2)),
