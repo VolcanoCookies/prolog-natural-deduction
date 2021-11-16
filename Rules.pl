@@ -39,6 +39,11 @@ orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     last_proof(Box2, [_, Conclusion, _]).
 
 andint(I1, I2, _, Proofs, [Line, and(C1,C2), Name] ):-
+pbc(I1, I2, _, Proofs, [Line, C1, Name]) :-
+    box(Proofs, [Line, C1, Name], I1, I2, Box),
+    first_proof(Box, [_, neg(C1), _]),
+    last_proof(Box, [_, cont, _]).
+
     proof(Proofs, [Line, and(C1,C2), Name], I1, [_, C1, _]),
     proof(Proofs, [Line, and(C1,C2), Name], I2, [_, C2, _]).
    
