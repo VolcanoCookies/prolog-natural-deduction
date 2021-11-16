@@ -16,7 +16,7 @@ is_list([_|_]).
  * @param List the list to check in.
  * @param Predicate the predicate all elements in the list must match.
  */
-all_match([], Predicate).
+all_match([], _).
 all_match([Predicate|T], Predicate) :-
     all_match(T, Predicate).
 
@@ -287,7 +287,7 @@ box_of(Initial, Box, Proof, Box) :-
     contains(Initial, Box).
 box_of(Box, Box, Proof, Box) :-
     contains(Box, Proof).
-box_of(Initial, [H|_], Proof, Box) :-
+box_of(_, [H|_], Proof, Box) :-
     is_box(H),
     box_of(H, H, Proof, Box).
 box_of(Initial, [_|T], Proof, Box) :-
