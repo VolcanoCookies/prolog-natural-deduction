@@ -289,7 +289,7 @@ box_of(Box, Box, Proof, Box) :-
     contains(Box, Proof).
 box_of(Initial, [H|_], Proof, Box) :-
     is_box(H),
-    box_of(Initial, H, Proof, Box).
+    box_of(H, H, Proof, Box).
 box_of(Initial, [_|T], Proof, Box) :-
     box_of(Initial, T, Proof, Box).
 
