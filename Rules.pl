@@ -34,7 +34,6 @@ negnegel(I1,_,Proofs, [Line,C1,Name]) :-
 negnegint(I1,_,Proofs, [Line,neg(neg(C1)),Name]) :-
     conclusion(Proofs, [Line,neg(neg(C1)),Name], I1,C1).
 
-
 orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     box(Proofs, [Line, Conclusion, Name], I2, I3, Box1),
     first_proof(Box1, [_, C1, _]),
@@ -44,26 +43,23 @@ orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     last_proof(Box1, [_, Conclusion, _]),
     last_proof(Box2, [_, Conclusion, _]).
 
-andint(I1, I2, _, Proofs, [Line, and(C1,C2), Name] ):-
 pbc(I1, I2, _, Proofs, [Line, C1, Name]) :-
     box(Proofs, [Line, C1, Name], I1, I2, Box),
     first_proof(Box, [_, neg(C1), _]),
     last_proof(Box, [_, cont, _]).
 
+andint(I1, I2, _, Proofs, [Line, and(C1,C2), Name] ) :-
     proof(Proofs, [Line, and(C1,C2), Name], I1, [_, C1, _]),
     proof(Proofs, [Line, and(C1,C2), Name], I2, [_, C2, _]).
    
-andel1(I1, _, Proofs, [Line, Conclusion, Name]):-
+andel1(I1, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, and(Conclusion, _), _]).
    
-andel2(I1, _, Proofs, [Line, Conclusion, Name]):-
+andel2(I1, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
     
-lem(_,_, [_,or(C1,neg(C1)),_]).
+lem(_, _, [_, or(C1, neg(C1)), _]).
 
-mt(I1,I2,_,Proofs,[Line,neg(C1),Name]):-
-    conclusion(Proofs,[Line,neg(C1),Name],I1,imp(C1,C2)),
-    conclusion(Proofs,[Line,neg(C1),Name],I2,neg(C2)).
-
-
-
+mt(I1, I2, _, Proofs, [Line, neg(C1), Name]) :-
+    conclusion(Proofs, [Line, neg(C1), Name], I1, imp(C1,C2)),
+    conclusion(Proofs, [Line, neg(C1), Name], I2, neg(C2)).
