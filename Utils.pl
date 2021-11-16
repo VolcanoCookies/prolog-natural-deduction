@@ -50,7 +50,7 @@ until([H|T], Elm, Acc, Sub) :-
 append([], [L|LS], [L|LS]).
 append([], L, [L]).
 append([H|T], L, [H|R]) :-
-          append(T, L, R).
+      append(T, L, R).
 
 /**
  * flatten(+List : list, -Res : list).
@@ -158,7 +158,7 @@ natural_order([H|[N|T]]) :-
  */
 contains([H|_], H).
 contains([_|T], E) :-
-        contains(T, E).
+    contains(T, E).
 
 /**
  * deep_contains(+List : list, ?Element : any).
@@ -170,8 +170,8 @@ contains([_|T], E) :-
  */
 deep_contains([H|_], H).
 deep_contains([H|T], E) :-
-        deep_contains(H, E) ;
-        deep_contains(T, E).
+    deep_contains(H, E) ;
+    deep_contains(T, E).
 
 /**
  * deep_contains_proof(+Proofs : list, ?Proof : proof).
@@ -200,7 +200,7 @@ deep_contains_proof([_|T], Proof) :-
  */
 last([H|[]], H).
 last([_|T], E) :-
-        last(T, E).
+    last(T, E).
 
 /**
  * proof(+Proofs : list, +From : proof, +Line : integer, -Proof : proof).
@@ -266,8 +266,8 @@ box([Box|Next], From, Start, End, Box) :-
     last_proof(Box, [End, _, _]),
     deep_contains_proof(Next, From).
 box([H|_], From, Start, End, Box) :-
-  is_box(H),
-  box(H, From, Start, End, Box).
+    is_box(H),
+    box(H, From, Start, End, Box).
 box([_|T], From, Start, End, Box) :-
     box(T, From, Start, End, Box).
 

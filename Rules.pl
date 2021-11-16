@@ -38,14 +38,14 @@ orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     last_proof(Box1, [_, Conclusion, _]),
     last_proof(Box2, [_, Conclusion, _]).
 
-andint(I1, I2, _, Proofs, [Line,and(C1,C2),Name] ):-
-   proof(Proofs, [Line,and(C1,C2),Name],I1, [_, C1, _]),
-   proof(Proofs, [Line,and(C1,C2),Name],I2, [_, C2, _]).
+andint(I1, I2, _, Proofs, [Line, and(C1,C2), Name] ):-
+    proof(Proofs, [Line, and(C1,C2), Name], I1, [_, C1, _]),
+    proof(Proofs, [Line, and(C1,C2), Name], I2, [_, C2, _]).
    
 andel1(I1, _, Proofs, [Line, Conclusion, Name]):-
-   proof(Proofs, [Line, Conclusion, Name], I1, [_, and(Conclusion, _), _]).
+    proof(Proofs, [Line, Conclusion, Name], I1, [_, and(Conclusion, _), _]).
    
-andel2(I1, _, Proofs, [Line,Conclusion,Name]):-
-   proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
+andel2(I1, _, Proofs, [Line, Conclusion, Name]):-
+    proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
 
 
