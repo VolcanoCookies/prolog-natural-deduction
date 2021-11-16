@@ -1,4 +1,5 @@
-premise(Prems, _, [_, Conclusion, _]) :-
+premise(Prems, Proofs, [Line, Conclusion, Name]) :-
+    contains(Proofs, [Line, Conclusion, Name]),
     contains(Prems, Conclusion).
 
 impel(I1, I2, _, Proofs, [Line, Conclusion, Name]) :-
