@@ -2,7 +2,7 @@ verify(File) :-
     validate(File).
 
 validate(Input) :-
-    load_files(['../Utils.pl', '../Rules.pl']),
+    load_files(['Utils.pl', 'Rules.pl']),
     see(Input),
     read(Prems), read(Goal), read(Proofs),
     seen,
@@ -29,7 +29,9 @@ validate(Prems, Proofs, [Proof|Next]) :-
  * @param Proofs the proofs to find the goal in.
  */
 check_goal(Goal, Proofs) :-
-    last(Proofs, [_, Goal, _]).
+    last(Proofs, [_, Goal, _]) ->
+        write('Goal met!\n') ;
+        write('Goal not met!\n').
 
 % Log a line in the proof, and write if its valid or not.
 log([Line, Conclusion, Name], Valid) :-
@@ -40,4 +42,6 @@ log([Line, Conclusion, Name], Valid) :-
 valine(Prems, Proofs, [Line, Conclusion, Name]) :-
     functor(Name, F, _),
     contains([premise, assumption, copy, andint, andel1, andel2, orint1, orint2, orel, impint, impel, negint, negel, contel, negnegint, negnegel, mt, pbc, lem], F),
-    call(Name, Prems, Proofs, [Line, Conclusion, Name]).
+    (call(Name, Prems, Proofs, [Line, Conclusion, Name]) ->
+        log([Line, Conclusion, Name], 'Valid') ;
+        log([Line, Conclusion, Name], 'Invalid')).
