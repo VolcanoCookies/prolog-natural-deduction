@@ -53,36 +53,6 @@ append([H|T], L, [H|R]) :-
       append(T, L, R).
 
 /**
- * flatten(+List : list, -Res : list).
- *
- * Flattens List.
- *
- * @param List the list to flatten.
- * @param Res the flattened list.
- */
-flatten(List, Res) :- flatten(List, [], Res).
-flatten([], ACC, ACC).
-flatten([H|T], ACC, RES) :-
-    append(ACC, H, NEW),
-    flatten(T, NEW, RES).
-
-/**
- * len(+List : list, ?Size : integer).
- *
- * Succeeds if the List length equals Size.
- *
- * @param List the list to count the length for.
- * @param Size the size of the list.
- */
-len(List, Size) :-
-    flatten(List, Flattened),
-    len(Flattened, 0, Size).
-len([], Size, Size).
-len([_|T], Index, Size) :-
-    Next is Index+1,
-    len(T, Next, Size).
-
-/**
  * is_box(+Box : list).
  *
  * Succeeds if Box is a list where the first element is not a integer.
@@ -133,20 +103,6 @@ last_proof([Box|[]], Proof) :-
     last_proof(Box, Proof).
 last_proof([_|T], Proof) :-
     last_proof(T, Proof).
-
-/**
- * natural_order(+List : list).
- *
- * Succeeds if all the elements in the list are numbers, and fall in their natural ordering from low to high.
- *
- * @param List the list to check the natural ordering for.
- */
-natural_order([_|[]]).
-natural_order([H|[N|T]]) :-
-    number(H),
-    number(N),
-    H<N,
-    natural_order([N|T]).
 
 /**
  * contains(+List : list, ?Element : any).
