@@ -20,6 +20,12 @@ andel1(I1, _, Proofs, [Line, Conclusion, Name]) :-
 andel2(I1, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, and(_, Conclusion), _]).
 
+orint1(I1, _, Proofs, [Line, or(C1, _), Name]) :-
+    conclusion(Proofs, [Line, or(C1, _), Name], I1, C1).
+
+orint2(I1, _, Proofs, [Line, or(_, C1), Name]) :-
+    conclusion(Proofs, [Line, or(_, C1), Name], I1, C1).
+
 orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     box(Proofs, [Line, Conclusion, Name], I2, I3, Box1),
     first_proof(Box1, [_, C1, _]),
