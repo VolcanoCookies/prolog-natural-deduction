@@ -10,7 +10,7 @@ assumption(_, Proofs, [Line, Conclusion, Name]) :-
 copy(I, _, Proofs, [Line, Conclusion, Name]) :-
     conclusion(Proofs, [Line, Conclusion, Name], I, Conclusion).
 
-andint(I1, I2, _, Proofs, [Line, and(C1,C2), Name] ):-
+andint(I1, I2, _, Proofs, [Line, and(C1, C2), Name] ):-
     proof(Proofs, [Line, and(C1,C2), Name], I1, [_, C1, _]),
     proof(Proofs, [Line, and(C1,C2), Name], I2, [_, C2, _]).
 
