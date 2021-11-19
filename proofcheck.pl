@@ -2,7 +2,7 @@ verify(File) :-
     validate(File).
 
 validate(Input) :-
-    load_files(['../Utils.pl', '../Rules.pl']),
+    load_files(['./Utils.pl', './Rules.pl']),
     see(Input),
     read(Prems), read(Goal), read(Proofs),
     seen,
