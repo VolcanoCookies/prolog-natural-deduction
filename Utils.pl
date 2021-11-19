@@ -130,23 +130,6 @@ deep_contains([H|T], E) :-
     deep_contains(T, E).
 
 /**
- * deep_contains_proof(+Proofs : list, ?Proof : proof).
- *
- * Succeeds if Proofs, or any boxes within, contains Proof.
- *
- * @param Proofs the proofs to look in.
- * @param Proof the proof to find.
- */
-deep_contains_proof([Proof|_], Proof).
-deep_contains_proof([H|_], Proof) :-
-    not(is_proof(H)),
-    deep_contains_proof(H, Proof).
-deep_contains_proof([_|T], Proof) :-
-    not(is_proof(T)),
-    deep_contains_proof(T, Proof).
-
-
-/**
  * last(+List : list, ?Element : any).
  *
  * Succeeds if the last element in List equals Element.
@@ -184,7 +167,7 @@ last([_|T], E) :-
  * @param Proof the proof at line Line.
  */
 proof([[Line, Conclusion, Name]|Next], From, Line, [Line, Conclusion, Name]) :-
-    deep_contains_proof(Next, From).
+    deep_contains(Next, From).
 proof([Box|_], From, Line, Proof) :-
     is_box(Box),
     proof(Box, From, Line, Proof).
