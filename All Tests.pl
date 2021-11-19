@@ -1,10 +1,10 @@
 % For sicstus: use_module(library(lists)).  before consulting the file.
 
 run_all_tests_debug() :-
-    run_all_tests('./proofcheck - debug.pl').
+    run_all_tests('./Proofcheck - debug.pl').
 
 run_all_tests() :-
-    run_all_tests('./proofcheck.pl').
+    run_all_tests('./Proofcheck.pl').
 
 run_all_tests(ProgramToTest) :-
     directory_files('./tests/valid', [_|[_|ValidFiles]]),
