@@ -1,12 +1,40 @@
+/**
+ * premise(+Prems : list, +Proofs : list, +Proof : proof).
+ *
+ * Succeeds if Prems contains Proof.
+ *
+ * @param Prems all our premises.
+ * @param Proofs all our proofs.
+ * @param Proof the proof we are on currently.
+ */
 premise(Prems, _, [_, Conclusion, _]) :-
     contains(Prems, Conclusion).
 
+/**
+ * premise(+Prems : list, +Proofs : list, +Proof : proof).
+ *
+ * Succeeds if Proof is in a box, and all proofs before it in the same box are assumptions.
+ *
+ * @param Prems all our premises.
+ * @param Proofs all our proofs.
+ * @param Proof the proof we are on currently.
+ */
 assumption(_, Proofs, [Line, Conclusion, Name]) :-
     box_of(Proofs, [Line, Conclusion, Name], Box),
     not(Box = Proofs),
     until(Box, [Line, Conclusion, Name], Sublist),
     all_match(Sublist, [_, _, assumption]).
 
+/**
+ * premise(+I : int, +Prems : list, +Proofs : list, +Proof : proof).
+ *
+ * Succeeds if the conclusion on the line we are copying is the same as the current conclusion.
+ *
+ * @param I the line we are copying.
+ * @param Prems all our premises.
+ * @param Proofs all our proofs.
+ * @param Proof the proof we are on currently.
+ */
 copy(I, _, Proofs, [Line, Conclusion, Name]) :-
     conclusion(Proofs, [Line, Conclusion, Name], I, Conclusion).
 
@@ -34,7 +62,7 @@ orel(I1, I2, I3, I4, I5, _, Proofs, [Line, Conclusion, Name]) :-
     proof(Proofs, [Line, Conclusion, Name], I1, [_, or(C1, C2), _]),
     last_proof(Box1, [_, Conclusion, _]),
     last_proof(Box2, [_, Conclusion, _]).
-    
+
 impint(I1, I2, _, Proofs, [Line, imp(C1, C2), Name]) :-
     box(Proofs, [Line, imp(C1, C2), Name], I1, I2, Box),
     first_proof(Box, [_, C1, assumption]),
@@ -55,17 +83,17 @@ negel(I1, I2, _, Proofs, [Line, cont, Name]) :-
 
 contel(I1, _, Proofs, [Line, Conclusion, Name]):-
     conclusion(Proofs, [Line, Conclusion, Name], I1, cont).
-    
+
 negnegint(I1, _, Proofs, [Line, neg(neg(C1)), Name]) :-
     conclusion(Proofs, [Line, neg(neg(C1)), Name], I1, C1).
 
 negnegel(I1, _, Proofs, [Line, C1, Name]) :-
     conclusion(Proofs, [Line, C1, Name], I1, neg(neg(C1))).
-    
+
 mt(I1, I2, _, Proofs, [Line, neg(C1), Name]) :-
     conclusion(Proofs, [Line, neg(C1), Name], I1, imp(C1,C2)),
     conclusion(Proofs, [Line, neg(C1), Name], I2, neg(C2)).
-    
+
 pbc(I1, I2, _, Proofs, [Line, C1, Name]) :-
     box(Proofs, [Line, C1, Name], I1, I2, Box),
     first_proof(Box, [_, neg(C1), _]),
