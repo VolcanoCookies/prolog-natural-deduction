@@ -9,7 +9,6 @@ validate(Input) :-
     validate(Prems, Proofs, Proofs),
     check_goal(Goal, Proofs).
 
-% Depth tells us how many boxes we can open.
 validate(_, _, []).
 validate(Prems, Proofs, [Box|Next]) :-
     is_box(Box),
