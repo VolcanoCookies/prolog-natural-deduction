@@ -128,6 +128,22 @@ deep_contains([H|_], H).
 deep_contains([H|T], E) :-
     deep_contains(H, E) ;
     deep_contains(T, E).
+    
+/**
+ * deep_contains_proof(+Proofs : list, ?Proof : proof).
+ *
+ * Succeeds if Proofs, or any boxes within, contains Proof.
+ *
+ * @param Proofs the proofs to look in.
+ * @param Proof the proof to find.
+ */
+deep_contains_proof([Proof|_], Proof).
+deep_contains_proof([H|_], Proof) :-
+    not(is_proof(H)),
+    deep_contains_proof(H, Proof).
+deep_contains_proof([_|T], Proof) :-
+    not(is_proof(T)),
+    deep_contains_proof(T, Proof).
 
 /**
  * last(+List : list, ?Element : any).
